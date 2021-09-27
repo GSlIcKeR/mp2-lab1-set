@@ -5,6 +5,8 @@
 //
 // Множество - реализация через битовые поля
 
+// временный коммент
+
 #include "tset.h"
 
 // Fake variables used as placeholders in tests
