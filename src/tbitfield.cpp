@@ -13,6 +13,7 @@ static TBitField FAKE_BITFIELD(1);
 
 TBitField::TBitField(int len)
 {
+    
     BitLen = len;
     MemLen = len / (sizeof(TELEM)*8) + 1;
     pMem=new TELEM[MemLen];
@@ -120,7 +121,11 @@ int TBitField::operator!=(const TBitField &bf) const // сравнение
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
-    return FAKE_BITFIELD;
+    TBitField tField(BitLen > bf.BitLen ? *this : bf);
+    for (int i = 0; i < min(this->MemLen, bf.MemLen); i++) {
+        tField.pMem[i] = this->pMem[i] | bf.pMem[i];
+    }
+    return tField;
 }
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
@@ -134,7 +139,7 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 
 TBitField TBitField::operator~(void) // отрицание
 {
-    const int BitSize = sizeof(TELEM) * 8;
+    int BitSize = sizeof(TELEM) * 8;
     for (int i = 0; i < MemLen; ++i)
         pMem[i] = ~pMem[i];
     pMem[MemLen - 1] = (pMem[MemLen - 1] << BitSize - (BitLen % BitSize)) >> BitSize - (BitLen % BitSize);
